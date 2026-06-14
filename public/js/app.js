@@ -49725,19 +49725,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
+///* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       visible1: true,
       visible2: true,
-      dealercount: null, //изначальные очки дилера
-      usercount: null, //изначальные очки игрока
-      tempindex: null, //для временного индекса массива
-      bet: null, //ставка null     
-      usercards: [], //пустые карты игрока
-      dealercards: [] //пустые карты диллера
+      dealercount: null, //initial dealer points
+      usercount: null, //initial player points
+      tempindex: null, //for temporary array index
+      bet: null, //null bet
+      usercards: [], //empty player cards
+      dealercards: [] //empty dealer cards
     };
   },
 
@@ -49746,7 +49744,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     getcardforuser: function getcardforuser() {
-      document.getElementById('shirt').style.display = "block"; //лёгкая анимация при получении карты игрока 
+      document.getElementById('shirt').style.display = "block"; //slight animation when player gets a card 
       setTimeout(function () {
         document.getElementById('shirt').style.transform = "translate3d(77px, 310px, 0px)";
       }, 1);
@@ -49754,11 +49752,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         document.getElementById('shirt').style.display = "none";
       }, 220);
       setTimeout(function () {
-        document.getElementById('shirt').style.transform = "translate3d(0px, 0px, 0px)"; //возврат назад
+        document.getElementById('shirt').style.transform = "translate3d(0px, 0px, 0px)"; //return back
       }, 221);
     },
     getcardforuser1: function getcardforuser1() {
-      document.getElementById('shirt').style.display = "block"; //лёгкая анимация при получении карты игрока 
+      document.getElementById('shirt').style.display = "block"; //slight animation when player gets a card 
       setTimeout(function () {
         document.getElementById('shirt').style.transform = "translate3d(110px, 310px, 0px)";
       }, 1);
@@ -49766,11 +49764,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         document.getElementById('shirt').style.display = "none";
       }, 220);
       setTimeout(function () {
-        document.getElementById('shirt').style.transform = "translate3d(0px, 0px, 0px)"; //возврат назад
+        document.getElementById('shirt').style.transform = "translate3d(0px, 0px, 0px)"; //return back
       }, 221);
     },
     getcardfordealer: function getcardfordealer() {
-      document.getElementById('shirt').style.display = "block"; //лёгкая анимация при получении карты дилера
+      document.getElementById('shirt').style.display = "block"; //slight animation when dealer gets a card
       setTimeout(function () {
         document.getElementById('shirt').style.transform = "translate3d(66px, 130px, 0px)";
       }, 1);
@@ -49778,13 +49776,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         document.getElementById('shirt').style.display = "none";
       }, 200);
       setTimeout(function () {
-        document.getElementById('shirt').style.transform = "translate3d(0px, 0px, 0px)"; //возврат назад
+        document.getElementById('shirt').style.transform = "translate3d(0px, 0px, 0px)"; //return back
       }, 221);
     },
     getbet: function getbet() {
       var _this = this;
 
-      //задать ставку
+      //set bet
       if (this.bet <= 0) {
         Swal.fire({
           title: 'Make your bet!',
@@ -49796,27 +49794,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           confirmButtonColor: '#3490dc'
         });
       } else {
-        this.visible1 = false; //прячем GO и идём дальше по сценарию                             
-        this.tempindex = Math.floor(Math.random() * this.cards.length) + 1; //рандомное число из cards[] от 1 до length                   
-        this.dealercards.push(this.cards[this.tempindex]); // 1 карта для дилера
-        this.dealercount += this.cards[this.tempindex].value; //очки    
-        this.dealercards.push(this.cards[0]); //рубашка для дилера
-        this.cards.splice(this.tempindex, 1); //удаление 1й карты из колоды
-        this.cards.splice(0, 1); //удаление рубашки из коллоды 
+        this.visible1 = false; //hide GO and proceed with the game                             
+        this.tempindex = Math.floor(Math.random() * this.cards.length) + 1; //random number from cards[] between 1 and length                   
+        this.dealercards.push(this.cards[this.tempindex]); // 1 card for the dealer
+        this.dealercount += this.cards[this.tempindex].value; //points    
+        this.dealercards.push(this.cards[0]); //card back for the dealer
+        this.cards.splice(this.tempindex, 1); //remove 1st card from the deck
+        this.cards.splice(0, 1); //remove card back from the deck 
 
         this.addusercard();
         this.addusercard();
       }
 
       if (this.usercards[0].value == 11 && this.usercards[1].value == 11) {
-        //если 2 туза
+        //if 2 aces
         this.usercount = 12;
       }
 
       if (this.usercount == 21) {
-        //если 21 сразу то победа                        
-        this.bet *= 2.5; // ставка 2.5
-        this.cash += this.bet; // баланс + ставка
+        //if 21 immediately, then win                        
+        this.bet *= 2.5; // bet 2.5
+        this.cash += this.bet; // balance + bet
 
         Swal.fire({
           title: 'BLACKJACK!!!',
@@ -49828,7 +49826,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           if (result.value) {
             var data = { cash: _this.cash };
             axios.put('/public/updatecash', data).then(function (response) {
-              //2 простенький axios для изменения баланса после ставки на 2.5
+              //simple axios call to update balance after a 2.5 blackjack payout
               console.log(response.data);
             }).catch(function (error) {
               console.log(error);
@@ -49850,20 +49848,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     popshirt: function popshirt() {
-      this.dealercards.pop(); //удалить рубаху       
+      this.dealercards.pop(); //remove dealer's card back       
     },
     addusercard: function addusercard() {
       var _this2 = this;
 
-      this.tempindex = Math.floor(Math.random() * this.cards.length); // рандомное число из cards[] от 0 до length
-      this.usercards.push(this.cards[this.tempindex]); // добавление в карты к игроку
-      this.usercount += this.cards[this.tempindex].value; // очки игрока после добавления карты
-      this.cards.splice(this.tempindex, 1); // удаление из общей колоды
+      this.tempindex = Math.floor(Math.random() * this.cards.length); // random number from cards[] between 0 and length
+      this.usercards.push(this.cards[this.tempindex]); // add card to player
+      this.usercount += this.cards[this.tempindex].value; // player points after adding card
+      this.cards.splice(this.tempindex, 1); // remove from the deck
 
       if (this.usercount > 21) {
-        // баланс - ставка
+        // balance - bet
         Swal.fire({
-          title: 'You loose!',
+          title: 'You lose!',
           position: 'top',
           text: "Your count is: " + this.usercount,
           confirmButtonColor: '#3490dc',
@@ -49897,16 +49895,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this3 = this;
 
       do {
-        this.tempindex = Math.floor(Math.random() * this.cards.length); // рандомное число из cards[] от 0 до length
-        this.dealercards.push(this.cards[this.tempindex]); // добавление в карты к игроку
-        this.dealercount += this.cards[this.tempindex].value; // очки игрока после добавления карты
+        this.tempindex = Math.floor(Math.random() * this.cards.length); // random number from cards[] between 0 and length
+        this.dealercards.push(this.cards[this.tempindex]); // add card to dealer's hand
+        this.dealercount += this.cards[this.tempindex].value; // dealer points after adding card
         this.cards.splice(this.tempindex, 1);
       } while (this.dealercount < 16);
 
       if (this.dealercount > this.usercount && this.dealercount <= 21) {
-        // проигрыш
+        // loss
         Swal.fire({
-          title: 'You loose!',
+          title: 'You lose!',
           position: 'top',
           text: "Your count is: " + this.usercount,
           confirmButtonColor: '#3490dc',
@@ -49935,7 +49933,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           }
         });
       } else if (this.dealercount == this.usercount) {
-        //ничья
+        //draw
         Swal.fire({
           title: 'Draw!',
           position: 'top',
@@ -49948,7 +49946,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           }
         });
       } else {
-        Swal.fire({ //победа
+        Swal.fire({ //win
           title: 'You win!',
           position: 'top',
           text: "Your count is: " + this.usercount,
@@ -49956,7 +49954,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           allowOutsideClick: false
         }).then(function (result) {
           if (result.value) {
-            _this3.cash += _this3.bet * 1; // !!! изначально this.bet это строка. *1 ПРИВОДИТ ЕЁ К ЧИСЛУ !!! 
+            _this3.cash += _this3.bet * 1; // !!! initially this.bet is a string. *1 converts it to a number !!! 
             var data = { cash: _this3.cash };
             axios.put('/public/updatecash', data).then(function (response) {
               console.log(response.data);
@@ -49994,7 +49992,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         if (this.usercount > 21) {
           Swal.fire({
-            title: 'You loose!',
+            title: 'You lose!',
             position: 'top',
             text: "Your count is: " + this.usercount,
             confirmButtonColor: '#3490dc',
@@ -50466,7 +50464,7 @@ exports = module.exports = __webpack_require__(12)(false);
 
 
 // module
-exports.push([module.i, "\ntable {\n        width: 300px;\n        height: 300px;\n        border: solid 10px gold;\n}\ntr {\n    height: 100px;\n    border: solid 2px gold;\n}\ntd {        \n    width: 100px;\n    border: solid 2px gold;\n    border-bottom:0;\n    border-top: 0;\n}\n#rules{\n    margin-top: 3%;\n    border-radius: 2px;\n    border: solid blue;\n}\n#reel1, #reel11, #reel111,\n#reel2, #reel22, #reel222,\n#reel3, #reel33, #reel333 {    \n    position: relative; /*установить колесо внизу div*/\n    bottom: 1700px;  \n    -webkit-transition-duration: 1s;  \n            transition-duration: 1s;\n    -webkit-transition-timing-function: cubic-bezier(0,0,1,1);\n            transition-timing-function: cubic-bezier(0,0,1,1); /*равномерная анимация*/\n    display: none;\n}\n#slot1, #slot2, #slot3,\n#slot11, #slot22, #slot33,\n#slot111, #slot222, #slot333 {\n    display: block;\n}\n#do{\n    width: 100px;\n    height: 100px;\n    overflow: hidden;\n}\n.underbox{\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    border: 4px groove orangered; \n    border-radius: 30%;\n    text-align: center;  \n    font-size: 22px;         \n    height: 50px;\n    width: 120px;        \n    color: #1b1f3d;\n}    \n", ""]);
+exports.push([module.i, "\ntable {\n        width: 300px;\n        height: 300px;\n        border: solid 10px gold;\n}\ntr {\n    height: 100px;\n    border: solid 2px gold;\n}\ntd {        \n    width: 100px;\n    border: solid 2px gold;\n    border-bottom:0;\n    border-top: 0;\n}\n#rules{\n    margin-top: 3%;\n    border-radius: 2px;\n    border: solid blue;\n}\n#reel1, #reel11, #reel111,\n#reel2, #reel22, #reel222,\n#reel3, #reel33, #reel333 {    \n    position: relative; /*position the reel at the bottom of the div*/\n    bottom: 1700px;  \n    -webkit-transition-duration: 1s;  \n            transition-duration: 1s;\n    -webkit-transition-timing-function: cubic-bezier(0,0,1,1);\n            transition-timing-function: cubic-bezier(0,0,1,1); /*linear animation*/\n    display: none;\n}\n#slot1, #slot2, #slot3,\n#slot11, #slot22, #slot33,\n#slot111, #slot222, #slot333 {\n    display: block;\n}\n#do{\n    width: 100px;\n    height: 100px;\n    overflow: hidden;\n}\n.underbox{\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    border: 4px groove orangered; \n    border-radius: 30%;\n    text-align: center;  \n    font-size: 22px;         \n    height: 50px;\n    width: 120px;        \n    color: #1b1f3d;\n}    \n", ""]);
 
 // exports
 
@@ -50627,23 +50625,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     data: function data() {
         return {
-            bet: 0, //ставка 0 
+            bet: 0, //initial bet 0 
             tempindex: null,
-            line1: 0, //для суммиования выигрыша
+            line1: 0, //for summing up winnings
             line2: 0,
             line3: 0,
             line4: 0,
             line5: 0,
             wins: 0,
-            slotmachine: [[], [], []] //пустой 2мерный массив для машины                
+            slotmachine: [[], [], []] //empty 2D array for slot machine reels                
         };
     },
 
 
     methods: {
         animation: function animation() {
-            //анимация прокрутки
-            this.cash -= this.bet; //сразу отнимаем ставку от баланса     
+            //spin animation
+            this.cash -= this.bet; //deduct the bet amount from balance immediately     
             document.getElementById('reel1').style.display = "block";
             document.getElementById('reel2').style.display = "block";
             document.getElementById('reel3').style.display = "block";
@@ -50715,7 +50713,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         spin: function spin(bet) {
             var _this = this;
 
-            // прокрутка + резкльтат
+            // spin + calculate result
             this.bet = bet;
             if (this.bet > this.cash) {
                 Swal.fire({
@@ -50732,7 +50730,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         getfirstslots: function getfirstslots() {
-            //получить рандомные слоты вначале
+            //get random slots at the start
             for (var i = 0; i < 3; i++) {
                 this.tempindex = Math.floor(Math.random() * this.slots.length);
                 this.slotmachine[0].push(this.slots[this.tempindex]);
@@ -50745,7 +50743,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         getslots: function getslots() {
-            // ф-ция для запуска
+            // function to spin and get slots
             this.slotmachine = [[], [], []];
             this.wins = this.line1 = this.line2 = this.line3 = this.line4 = this.line5 = 0;
 
@@ -50759,7 +50757,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.tempindex = Math.floor(Math.random() * this.slots.length);
                 this.slotmachine[2].push(this.slots[this.tempindex]);
             }
-            //логика:
+            //game winning logic:
             if (this.slotmachine[0][0].title == 'cherry' && this.slotmachine[0][1].title == 'cherry') {
                 this.line1 = this.bet * 2;
             }
@@ -50919,7 +50917,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
 
-            console.log('1 - ' + this.line1); //для проверки
+            console.log('1 - ' + this.line1); //for verification
             console.log('2 - ' + this.line2);
             console.log('3 - ' + this.line3);
             console.log('4 - ' + this.line4);
@@ -50930,7 +50928,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     mounted: function mounted() {
         console.log('Component mounted.');
-        this.getfirstslots(); //рандомные слоты в начале
+        this.getfirstslots(); //get random slots at the start
     }
 });
 

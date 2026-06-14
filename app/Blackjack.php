@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Blackjack extends Model
 {	
 
-	public $usercount = null;    //подсчёт очков игрока
-	public $dealercount = null;  //подсчёт очков дилера
+	public $usercount = null;    // player points calculation
+	public $dealercount = null;  // dealer points calculation
 
-	public $usercards = []; //пустой массив игрока для заполнения картиами
-	public $dealercards = []; //пустой массив дилера для заполнения картами
+	public $usercards = []; // empty array for player cards
+	public $dealercards = []; // empty array for dealer cards
 
-	public $tempindex = null;//для записи рандомного индекса
+	public $tempindex = null;// to record random index
 	
 
 	public $cards = [
-		//рубаха
+		// card back
 		array('title'=>'shirt','url'=>'img/cards/shirt.png','value'=>0),//0
-		//чирва
+		// hearts
 		array('title'=>'2ч','url'=>'img/cards/2ч.jpeg','value'=>2),//1   
 		array('title'=>'3ч','url'=>'img/cards/3ч.jpeg','value'=>3),//2
 		array('title'=>'4ч','url'=>'img/cards/4ч.jpeg','value'=>4),//3
@@ -34,7 +34,7 @@ class Blackjack extends Model
 		array('title'=>'Дч','url'=>'img/cards/Дч.jpeg','value'=>10),//11
 		array('title'=>'Кч','url'=>'img/cards/Кч.jpeg','value'=>10),//12
 		array('title'=>'Тч','url'=>'img/cards/Тч.jpeg','value'=>11),//13
-		//трефа
+		// clubs
 		array('title'=>'2т','url'=>'img/cards/2т.jpeg','value'=>2),//14
 		array('title'=>'3т','url'=>'img/cards/3т.jpeg','value'=>3),//15
 		array('title'=>'4т','url'=>'img/cards/4т.jpeg','value'=>4),//16
@@ -48,7 +48,7 @@ class Blackjack extends Model
 		array('title'=>'Дт','url'=>'img/cards/Дт.jpeg','value'=>10),//24
 		array('title'=>'Кт','url'=>'img/cards/Кт.jpeg','value'=>10),//25
 		array('title'=>'Тт','url'=>'img/cards/Тт.jpeg','value'=>11),//26
-		//бубна
+		// diamonds
 		array('title'=>'2б','url'=>'img/cards/2б.jpeg','value'=>2),//27
 		array('title'=>'3б','url'=>'img/cards/3б.jpeg','value'=>3),//28
 		array('title'=>'4б','url'=>'img/cards/4б.jpeg','value'=>4),//29
@@ -62,7 +62,7 @@ class Blackjack extends Model
 		array('title'=>'Дб','url'=>'img/cards/Дб.jpeg','value'=>10),//37
 		array('title'=>'Кб','url'=>'img/cards/Кб.jpeg','value'=>10),//38
 		array('title'=>'Тб','url'=>'img/cards/Тб.jpeg','value'=>11),//39
-		//пика
+		// spades
 		array('title'=>'2п','url'=>'img/cards/2п.jpeg','value'=>2),//40
 		array('title'=>'3п','url'=>'img/cards/3п.jpeg','value'=>3),//41
 		array('title'=>'4п','url'=>'img/cards/4п.jpeg','value'=>4),//42

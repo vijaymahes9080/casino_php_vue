@@ -110,10 +110,10 @@
     #reel1, #reel11, #reel111,
     #reel2, #reel22, #reel222,
     #reel3, #reel33, #reel333 {    
-        position: relative; /*установить колесо внизу div*/
+        position: relative; /*position the reel at the bottom of the div*/
         bottom: 1700px;  
         transition-duration: 1s;
-        transition-timing-function: cubic-bezier(0,0,1,1); /*равномерная анимация*/
+        transition-timing-function: cubic-bezier(0,0,1,1); /*linear animation*/
         display: none;        
     }
 
@@ -153,21 +153,21 @@
 
          data() {
             return {                
-                bet: 0,                    //ставка 0 
+                bet: 0,                    //initial bet 0 
                 tempindex: null,
-                line1: 0,                  //для суммиования выигрыша
+                line1: 0,                  //for summing up winnings
                 line2: 0,
                 line3: 0,
                 line4: 0,
                 line5: 0,  
                 wins: 0,   
-                slotmachine: [[],[],[]]      //пустой 2мерный массив для машины                
+                slotmachine: [[],[],[]]    //empty 2D array for slot machine reels                
             }
         },  
 
         methods:{
-            animation(){                    //анимация прокрутки
-            this.cash -= this.bet;         //сразу отнимаем ставку от баланса     
+            animation(){                    //spin animation
+            this.cash -= this.bet;         //deduct the bet amount from balance immediately     
                 document.getElementById('reel1').style.display="block";
                 document.getElementById('reel2').style.display="block";
                 document.getElementById('reel3').style.display="block";
@@ -237,11 +237,11 @@
                 }, 1000);                              
             },
 
-            spin(bet){                                             // прокрутка + резкльтат
+            spin(bet){                                             // spin + calculate result
                 this.bet = bet;                
                 if(this.bet > this.cash){
                     Swal.fire({
-                          title: 'Not enough cash!',                        
+                          title: 'Not enough cash!',
                           confirmButtonColor: '#3490dc' 
                     })
                 }
@@ -251,7 +251,7 @@
                 }
             },
 
-             getfirstslots(){                                                                                   //получить рандомные слоты вначале
+             getfirstslots(){                                                                                   //get random slots at the start
                  for(var i=0; i<3; i++) {
                     this.tempindex = Math.floor(Math.random()*this.slots.length); 
                     this.slotmachine[0].push(this.slots[this.tempindex]);  
@@ -264,7 +264,7 @@
                 }
             },
 
-            getslots(){                                                                                         // ф-ция для запуска
+            getslots(){                                                                                         // function to spin and get slots
                 this.slotmachine = [[],[],[]];                
                 this.wins = this.line1 = this.line2 = this.line3 = this.line4 = this.line5 = 0; 
                                                                                 
@@ -278,7 +278,7 @@
                     this.tempindex = Math.floor(Math.random()*this.slots.length); 
                     this.slotmachine[2].push(this.slots[this.tempindex]);
                 }
-                //логика:
+                //game winning logic:
                 if((this.slotmachine[0][0].title == 'cherry')&&(this.slotmachine[0][1].title == 'cherry')){
                     this.line1 = this.bet*2;
                 }
@@ -438,7 +438,7 @@
                    console.log(error);
                 }); 
                 
-                console.log('1 - '+ this.line1);  //для проверки
+                console.log('1 - '+ this.line1);  //for verification
                 console.log('2 - '+ this.line2); 
                 console.log('3 - '+ this.line3); 
                 console.log('4 - '+ this.line4); 
@@ -449,7 +449,7 @@
        
         mounted() {
             console.log('Component mounted.');
-            this.getfirstslots();                   //рандомные слоты в начале
+            this.getfirstslots();                   //get random slots at the start
         }
     }
 </script>

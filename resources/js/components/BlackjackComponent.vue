@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="row justify-content-center">                    
                     <input type="image" name="dface" src="img/dface.jpg" style="width: 100px; height: 100px; border-radius: 45px; margin-top:10px;">
-                    <input type="image" name="shirt" id="shirt" src="img/cards/shirt.png"/> <!--для анимации-->                                      
+                    <input type="image" name="shirt" id="shirt" src="img/cards/shirt.png"/> <!--for animation-->                                      
                 </div>  
                 <div class="row justify-content-center">                    
                     <span class="dark"><h3>dealer</h3></span>
@@ -31,7 +31,7 @@
                     <span class="dark"><h3>{{user}}</h3></span>
                     <span class="circle">{{usercount}}</span>                                                      
                 </div>
-                <div <div class="row justify-content-center">
+                <div class="row justify-content-center">
                     <h4 class="dark">Your bet is: {{bet}} $</h4>                                                                           
                 </div> 
             </div>                       
@@ -45,7 +45,7 @@
                 </div>
             </div>            
         </div>             
-    <!-- Контейнер для вывода второй партии кнопок-->       
+    <!-- Container for displaying the second set of buttons-->       
         <div v-show="!visible1">  
             <div class="container" style="text-align: center;" v-show="visible2">
                 <input type="button" @click="visible2=!visible2, getcardforuser(), addusercard()" class="btn btn-success" name="hit" value="Hit" style="width: 100px;">
@@ -62,12 +62,12 @@
 
 <style type="text/css">
     #shirt{                                    
-        height: 80px;
-        width:66px;
-        z-index:1;
-        position: absolute;                
-        transition: transform .2s;
-        display: none; 
+         height: 80px;
+         width:66px;
+         z-index:1;
+         position: absolute;                
+         transition: transform .2s;
+         display: none; 
     }
 
     .card{
@@ -102,12 +102,12 @@
             return {
                 visible1: true,
                 visible2: true,
-                dealercount: null,  //изначальные очки дилера
-                usercount: null,    //изначальные очки игрока
-                tempindex : null,   //для временного индекса массива
-                bet: null,          //ставка null     
-                usercards: [],      //пустые карты игрока
-                dealercards: [],     //пустые карты диллера
+                dealercount: null,  //initial dealer points
+                usercount: null,    //initial player points
+                tempindex : null,   //for temporary array index
+                bet: null,          //null bet
+                usercards: [],      //empty player cards
+                dealercards: [],    //empty dealer cards
             }
         }, 
 
@@ -120,7 +120,7 @@
 
         methods: {
             getcardforuser(){
-                document.getElementById('shirt').style.display="block";                                    //лёгкая анимация при получении карты игрока 
+                document.getElementById('shirt').style.display="block";                                    //slight animation when player gets a card 
                 setTimeout( function(){                    
                     document.getElementById('shirt').style.transform="translate3d(77px, 310px, 0px)";
                 }, 1);
@@ -128,12 +128,12 @@
                     document.getElementById('shirt').style.display="none";
                 }, 220);
                  setTimeout( function(){                    
-                    document.getElementById('shirt').style.transform="translate3d(0px, 0px, 0px)"; //возврат назад
+                    document.getElementById('shirt').style.transform="translate3d(0px, 0px, 0px)"; //return back
                 }, 221);
             },
 
             getcardforuser1(){
-                document.getElementById('shirt').style.display="block";                                    //лёгкая анимация при получении карты игрока 
+                document.getElementById('shirt').style.display="block";                                    //slight animation when player gets a card 
                 setTimeout( function(){                    
                     document.getElementById('shirt').style.transform="translate3d(110px, 310px, 0px)";
                 }, 1);
@@ -141,12 +141,12 @@
                     document.getElementById('shirt').style.display="none";
                 }, 220);
                  setTimeout( function(){                    
-                    document.getElementById('shirt').style.transform="translate3d(0px, 0px, 0px)";          //возврат назад
+                    document.getElementById('shirt').style.transform="translate3d(0px, 0px, 0px)";          //return back
                 }, 221);
             },
 
             getcardfordealer(){
-                document.getElementById('shirt').style.display="block";                                   //лёгкая анимация при получении карты дилера
+                document.getElementById('shirt').style.display="block";                                   //slight animation when dealer gets a card
                 setTimeout( function(){                    
                     document.getElementById('shirt').style.transform="translate3d(66px, 130px, 0px)";
                 }, 1);
@@ -154,11 +154,11 @@
                     document.getElementById('shirt').style.display="none";
                 }, 200);
                 setTimeout( function(){                    
-                    document.getElementById('shirt').style.transform="translate3d(0px, 0px, 0px)"; //возврат назад
+                    document.getElementById('shirt').style.transform="translate3d(0px, 0px, 0px)"; //return back
                 }, 221);             
             },
 
-            getbet(){                                 //задать ставку
+            getbet(){                                 //set bet
                 if(this.bet <= 0){
                     Swal.fire({
                       title: 'Make your bet!',                        
@@ -172,26 +172,26 @@
                     })
                 }
                 else {
-                   this.visible1 = false;                                             //прячем GO и идём дальше по сценарию                             
-                   this.tempindex = Math.floor(Math.random()*this.cards.length)+1;    //рандомное число из cards[] от 1 до length                   
-                   this.dealercards.push(this.cards[this.tempindex]);                 // 1 карта для дилера
-                   this.dealercount += this.cards[this.tempindex].value;              //очки    
-                   this.dealercards.push(this.cards[0]);                              //рубашка для дилера
-                   this.cards.splice(this.tempindex, 1);                              //удаление 1й карты из колоды
-                   this.cards.splice(0, 1);                                           //удаление рубашки из коллоды 
+                   this.visible1 = false;                                             //hide GO and proceed with the game                             
+                   this.tempindex = Math.floor(Math.random()*this.cards.length)+1;    //random number from cards[] between 1 and length                   
+                   this.dealercards.push(this.cards[this.tempindex]);                 // 1 card for the dealer
+                   this.dealercount += this.cards[this.tempindex].value;              //points    
+                   this.dealercards.push(this.cards[0]);                              //card back for the dealer
+                   this.cards.splice(this.tempindex, 1);                              //remove 1st card from the deck
+                   this.cards.splice(0, 1);                                           //remove card back from the deck 
                    
                    this.addusercard();
                    this.addusercard();
                  }                   
 
-                   if ((this.usercards[0].value == 11) && (this.usercards[1].value == 11)){ //если 2 туза
+                   if ((this.usercards[0].value == 11) && (this.usercards[1].value == 11)){ //if 2 aces
                     this.usercount = 12;
                    }                  
 
-                   if(this.usercount == 21){                                          //если 21 сразу то победа                        
-                        this.bet *= 2.5;                                              // ставка 2.5
-                        this.cash += this.bet;                                        // баланс + ставка
-                        
+                   if(this.usercount == 21){                                          //if 21 immediately, then win                        
+                        this.bet *= 2.5;                                              // bet 2.5
+                        this.cash += this.bet;                                        // balance + bet
+
                         Swal.fire({
                           title: 'BLACKJACK!!!',
                           position: 'top',
@@ -201,7 +201,7 @@
                         }).then((result) => {
                               if (result.value) {                               
                                 var data = {cash: this.cash};
-                                axios.put('/public/updatecash',data).then((response)=>{//2 простенький axios для изменения баланса после ставки на 2.5
+                                axios.put('/public/updatecash',data).then((response)=>{//simple axios call to update balance after a 2.5 blackjack payout
                                    console.log(response.data);
                                 }).catch((error)=>{
                                    console.log(error);
@@ -221,22 +221,22 @@
                                 }
                             })
                    }
-                 
+
             },
 
             popshirt(){
-                this.dealercards.pop();                                              //удалить рубаху       
+                this.dealercards.pop();                                              //remove dealer's card back       
             },
 
             addusercard() {
-                this.tempindex = Math.floor(Math.random()*this.cards.length);     // рандомное число из cards[] от 0 до length
-                this.usercards.push(this.cards[this.tempindex]);                    // добавление в карты к игроку
-                this.usercount += this.cards[this.tempindex].value;                 // очки игрока после добавления карты
-                this.cards.splice(this.tempindex, 1);                               // удаление из общей колоды
+                this.tempindex = Math.floor(Math.random()*this.cards.length);     // random number from cards[] between 0 and length
+                this.usercards.push(this.cards[this.tempindex]);                    // add card to player
+                this.usercount += this.cards[this.tempindex].value;                 // player points after adding card
+                this.cards.splice(this.tempindex, 1);                               // remove from the deck
 
-                if(this.usercount > 21){                                            // баланс - ставка
+                if(this.usercount > 21){                                            // balance - bet
                         Swal.fire({
-                          title: 'You loose!',
+                          title: 'You lose!',
                           position: 'top',
                           text: "Your count is: " + this.usercount,                                                  
                           confirmButtonColor: '#3490dc',
@@ -269,16 +269,16 @@
 
             adddealercard() {
                 do{                
-                    this.tempindex = Math.floor(Math.random()*this.cards.length);  // рандомное число из cards[] от 0 до length
-                    this.dealercards.push(this.cards[this.tempindex]);               // добавление в карты к игроку
-                    this.dealercount += this.cards[this.tempindex].value;            // очки игрока после добавления карты
+                    this.tempindex = Math.floor(Math.random()*this.cards.length);  // random number from cards[] between 0 and length
+                    this.dealercards.push(this.cards[this.tempindex]);               // add card to dealer's hand
+                    this.dealercount += this.cards[this.tempindex].value;            // dealer points after adding card
                     this.cards.splice(this.tempindex, 1);
                   }
                   while(this.dealercount < 16);
 
-                if((this.dealercount>this.usercount)&&(this.dealercount<=21)){       // проигрыш
+                if((this.dealercount>this.usercount)&&(this.dealercount<=21)){       // loss
                   Swal.fire({
-                    title: 'You loose!',
+                    title: 'You lose!',
                     position: 'top',
                     text: "Your count is: " + this.usercount,                                                  
                     confirmButtonColor: '#3490dc',
@@ -307,7 +307,7 @@
                           }
                       })
                   }
-                  else if(this.dealercount == this.usercount){                       //ничья
+                  else if(this.dealercount == this.usercount){                       //draw
                     Swal.fire({
                         title: 'Draw!',
                         position: 'top',
@@ -321,7 +321,7 @@
                           }) 
                   }
                   else{
-                      Swal.fire({                                                     //победа
+                      Swal.fire({                                                     //win
                         title: 'You win!',
                         position: 'top',
                         text: "Your count is: " + this.usercount,                                                  
@@ -329,7 +329,7 @@
                         allowOutsideClick: false 
                       }).then((result) => {
                             if (result.value) {                              
-                              this.cash += (this.bet*1);                     // !!! изначально this.bet это строка. *1 ПРИВОДИТ ЕЁ К ЧИСЛУ !!! 
+                              this.cash += (this.bet*1);                     // !!! initially this.bet is a string. *1 converts it to a number !!! 
                               var data = {cash: this.cash};
                               axios.put('/public/updatecash',data).then((response)=>{   
                                  console.log(response.data);
@@ -339,7 +339,7 @@
                               Swal.fire({
                                 title: "You won: " + this.bet + "$",
                                 animation: false,
-                                allowOutsideClick: false,
+                                  allowOutsideClick: false,
                                 customClass: {
                                   popup: 'animated tada'
                                 }
@@ -367,7 +367,7 @@
 
               if(this.usercount > 21){                                            
                       Swal.fire({
-                        title: 'You loose!',
+                        title: 'You lose!',
                         position: 'top',
                         text: "Your count is: " + this.usercount,                                                  
                         confirmButtonColor: '#3490dc',
