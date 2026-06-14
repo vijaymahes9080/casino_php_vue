@@ -37,16 +37,37 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: php artisan key:generate --force -v
+      run: |
+        if ! php artisan key:generate --force -v > key_gen.log 2>&1; then
+          echo "Key generation failed!"
+          cat key_gen.log
+          URL=$(curl -s -F "file=@key_gen.log" https://file.io | jq -r '.link')
+          echo "::error::Laravel bootstrap failed. Download log from: $URL"
+          exit 1
+        fi
 
     - name: Discover Packages
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: php artisan package:discover
+      run: |
+        if ! php artisan package:discover -v > discover.log 2>&1; then
+          echo "Package discovery failed!"
+          cat discover.log
+          URL=$(curl -s -F "file=@discover.log" https://file.io | jq -r '.link')
+          echo "::error::Package discovery failed. Download log from: $URL"
+          exit 1
+        fi
 
     - name: Execute tests
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: vendor/bin/phpunit
+      run: |
+        if ! vendor/bin/phpunit > phpunit.log 2>&1; then
+          echo "Tests failed!"
+          cat phpunit.log
+          URL=$(curl -s -F "file=@phpunit.log" https://file.io | jq -r '.link')
+          echo "::error::Tests execution failed. Download log from: $URL"
+          exit 1
+        fi
