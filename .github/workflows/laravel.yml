@@ -41,8 +41,11 @@ jobs:
         if ! php artisan key:generate --force -v > key_gen.log 2>&1; then
           echo "Key generation failed!"
           cat key_gen.log
-          URL=$(curl -s -F "file=@key_gen.log" https://file.io | jq -r '.link')
-          echo "::error::Laravel bootstrap failed. Download log from: $URL"
+          LOG_CONTENT=$(cat key_gen.log)
+          LOG_CONTENT="${LOG_CONTENT//%/%25}"
+          LOG_CONTENT="${LOG_CONTENT//$'\n'/%0A}"
+          LOG_CONTENT="${LOG_CONTENT//$'\r'/%0D}"
+          echo "::error::Laravel bootstrap failed: $LOG_CONTENT"
           exit 1
         fi
 
@@ -54,8 +57,11 @@ jobs:
         if ! php artisan package:discover -v > discover.log 2>&1; then
           echo "Package discovery failed!"
           cat discover.log
-          URL=$(curl -s -F "file=@discover.log" https://file.io | jq -r '.link')
-          echo "::error::Package discovery failed. Download log from: $URL"
+          LOG_CONTENT=$(cat discover.log)
+          LOG_CONTENT="${LOG_CONTENT//%/%25}"
+          LOG_CONTENT="${LOG_CONTENT//$'\n'/%0A}"
+          LOG_CONTENT="${LOG_CONTENT//$'\r'/%0D}"
+          echo "::error::Package discovery failed: $LOG_CONTENT"
           exit 1
         fi
 
@@ -67,7 +73,10 @@ jobs:
         if ! vendor/bin/phpunit > phpunit.log 2>&1; then
           echo "Tests failed!"
           cat phpunit.log
-          URL=$(curl -s -F "file=@phpunit.log" https://file.io | jq -r '.link')
-          echo "::error::Tests execution failed. Download log from: $URL"
+          LOG_CONTENT=$(cat phpunit.log)
+          LOG_CONTENT="${LOG_CONTENT//%/%25}"
+          LOG_CONTENT="${LOG_CONTENT//$'\n'/%0A}"
+          LOG_CONTENT="${LOG_CONTENT//$'\r'/%0D}"
+          echo "::error::Tests execution failed: $LOG_CONTENT"
           exit 1
         fi
