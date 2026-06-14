@@ -32,16 +32,19 @@ jobs:
         touch database/database.sqlite
 
     - name: Install PHP Dependencies
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
     - name: Generate key
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: php artisan key:generate
+
+    - name: Discover Packages
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: php artisan package:discover
 
     - name: Execute tests
       env:
