@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium and fully responsive client-side Casino application featuring Blackjack and Slots with LocalStorage database persistence.">
+    <title>Casino Royale</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="public/favicon.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    
+    <!-- CDNs for Modals & popups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+</head>
+<body>
+
+    <!-- ==================== STICKY HEADER ==================== -->
+    <nav class="navbar">
+        <a class="brand" id="brand-link">Casino Royale</a>
+        
+        <!-- Authenticated Navigation Elements -->
+        <div class="nav-links" id="nav-user-info" style="display: none;">
+            <a class="nav-item nav-link-item" id="nav-home-link" data-screen="lobby-screen">Home</a>
+            <div class="user-balance-info">
+                <span class="nav-item" id="display-username">Player</span>
+                <span class="balance-pill" id="display-balance">0 $</span>
+                <button class="btn btn-warning btn-sm" id="btn-open-topup" style="padding: 6px 12px; font-size: 0.85rem;">Top Up</button>
+            </div>
+            <a class="nav-item" id="btn-logout">Logout</a>
+        </div>
+
+        <!-- Unauthenticated Navigation Links -->
+        <div class="nav-links" id="nav-auth-links">
+            <span class="nav-item active">Welcome to Casino</span>
+        </div>
+    </nav>
+
+    <!-- ==================== 1. LOGIN & REGISTRATION SCREEN ==================== -->
+    <div class="app-screen login-screen" id="login-screen">
+        <div class="login-container glass-card">
+            <div class="login-tabs">
+                <div class="login-tab active" id="tab-login">Login</div>
+                <div class="login-tab" id="tab-register">Register</div>
+            </div>
+
+            <!-- Login Box -->
+            <div id="login-box">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" class="form-control" placeholder="Enter username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Sign In</button>
+                </form>
+            </div>
+
+            <!-- Register Box -->
+            <div id="register-box" style="display: none;">
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" class="form-control" placeholder="Choose username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" class="form-control" placeholder="Choose password" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 10px;">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 2. LOBBY SCREEN ==================== -->
+    <div class="app-screen lobby-screen" id="lobby-screen" style="display: none;">
+        <div class="welcome-title">
+            <h2 id="lobby-welcome-text">Welcome, Player!</h2>
+            <p>Choose a game below to start playing</p>
+        </div>
+
+        <div class="lobby-grid">
+            <!-- Blackjack Card -->
+            <div class="lobby-card glass-card" id="lobby-go-bj">
+                <img src="public/img/bj.png" alt="Blackjack">
+                <h3>Black Jack</h3>
+                <p>Classic 21 card game. Beat the dealer's score without busting!</p>
+            </div>
+
+            <!-- Slots Card -->
+            <div class="lobby-card glass-card" id="lobby-go-slots">
+                <img src="public/img/slots.png" alt="Slots">
+                <h3>Slot Machine</h3>
+                <p>Spin the reels and hit winning lines for huge multipliers.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 3. BLACKJACK SCREEN ==================== -->
+    <div class="app-screen game-screen" id="blackjack-screen" style="display: none;">
+        <div class="game-header">
+            <h3>Black Jack Table</h3>
+            <button class="btn btn-secondary btn-sm" onclick="location.reload()">Back to Lobby</button>
+        </div>
+
+        <div class="game-body">
+            <!-- Bet Setup Box -->
+            <div id="bj-bet-setup" class="bj-bet-area glass-card">
+                <h4>Place Your Bet</h4>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                    <span style="font-size: 1.2rem; font-weight: bold; color: var(--accent-gold);">$</span>
+                    <input type="number" id="bj-bet-input" class="form-control" style="width: 150px; text-align: center;" min="1" value="10">
+                </div>
+                <button class="btn btn-success" id="bj-start-btn" style="width: 150px; margin-top: 10px;">Deal Hand</button>
+            </div>
+
+            <!-- BJ Playboard (visible after Bet) -->
+            <div id="bj-play-area" class="bj-table" style="display: none;">
+                <!-- Dealer Area -->
+                <div class="bj-section">
+                    <div class="hand-label">
+                        Dealer Hand
+                        <span class="score-bubble" id="bj-dealer-count">0</span>
+                    </div>
+                    <div class="card-container" id="bj-dealer-cards">
+                        <!-- Dealer cards will be populated here -->
+                    </div>
+                    <img class="bj-deck-card bj-deck" src="public/img/cards/shirt.png" alt="Card Deck">
+                </div>
+
+                <!-- Player Area -->
+                <div class="bj-section">
+                    <div class="card-container" id="bj-user-cards">
+                        <!-- Player cards will be populated here -->
+                    </div>
+                    <div class="hand-label">
+                        Your Hand
+                        <span class="score-bubble" id="bj-user-count">0</span>
+                    </div>
+                </div>
+
+                <!-- Game stats & control buttons -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <h4 id="bj-bet-display" style="color: var(--accent-gold);">Your bet: 0 $</h4>
+                    <div class="game-controls">
+                        <button class="btn btn-success" id="bj-hit-btn" style="min-width: 90px;">Hit</button>
+                        <button class="btn btn-warning" id="bj-double-btn" style="min-width: 90px;">Double</button>
+                        <button class="btn btn-danger" id="bj-stand-btn" style="min-width: 90px;">Stand</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 4. SLOTS SCREEN ==================== -->
+    <div class="app-screen game-screen" id="slots-screen" style="display: none;">
+        <div class="game-header">
+            <h3>Lucky Slot Reels</h3>
+            <button class="btn btn-secondary btn-sm" onclick="location.reload()">Back to Lobby</button>
+        </div>
+
+        <div class="game-body">
+            <div class="slots-container">
+                <div class="slot-machine-wrapper">
+                    <!-- Reel Screen -->
+                    <div class="slot-machine">
+                        <!-- Row 1 -->
+                        <div class="slot-row">
+                            <div class="slot-cell" id="slot-1-1"></div>
+                            <div class="slot-cell" id="slot-1-2"></div>
+                            <div class="slot-cell" id="slot-1-3"></div>
+                        </div>
+                        <!-- Row 2 -->
+                        <div class="slot-row">
+                            <div class="slot-cell" id="slot-2-1"></div>
+                            <div class="slot-cell" id="slot-2-2"></div>
+                            <div class="slot-cell" id="slot-2-3"></div>
+                        </div>
+                        <!-- Row 3 -->
+                        <div class="slot-row">
+                            <div class="slot-cell" id="slot-3-1"></div>
+                            <div class="slot-cell" id="slot-3-2"></div>
+                            <div class="slot-cell" id="slot-3-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Rules Panel on the right -->
+                    <div class="rules-panel">
+                        <h4>Winning Payout Rates</h4>
+                        <div class="rules-grid">
+                            <div class="rules-item"><span>Cherry x2</span><span>2 Cherry</span></div>
+                            <div class="rules-item"><span>Cherry x14</span><span>3 Cherry</span></div>
+                            <div class="rules-item"><span>Orange x3</span><span>2 Orange</span></div>
+                            <div class="rules-item"><span>Orange x24</span><span>3 Orange</span></div>
+                            <div class="rules-item"><span>Plum x32</span><span>3 Plum</span></div>
+                            <div class="rules-item"><span>Bell x40</span><span>3 Bell</span></div>
+                            <div class="rules-item"><span>Bar x50</span><span>3 Bar</span></div>
+                            <div class="rules-item"><span>Seven x100</span><span>3 Seven</span></div>
+                        </div>
+                        <p style="font-size: 0.75rem; text-align: center; margin-top: 12px; color: var(--accent-gold);">
+                            * Payouts calculate across 3 horizontal and 2 diagonal lines.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats Panel -->
+                <div class="slot-stats-panel">
+                    <div class="stat-pill">
+                        <div class="label">Bet</div>
+                        <div class="value" id="slots-bet">0 $</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="label">Cash</div>
+                        <div class="value" id="slots-cash">0 $</div>
+                    </div>
+                    <div class="stat-pill win-pill">
+                        <div class="label">Wins</div>
+                        <div class="value" id="slots-wins">0 $</div>
+                    </div>
+                </div>
+
+                <!-- Bet Control Buttons -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <h5 style="color: var(--text-secondary); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Choose Bet Amount to Spin</h5>
+                    <div style="display: flex; gap: 15px;">
+                        <button class="btn btn-info" onclick="spinSlots(10)" style="width: 100px; font-weight: 700;">$ 10</button>
+                        <button class="btn btn-warning" onclick="spinSlots(50)" style="width: 100px; font-weight: 700;">$ 50</button>
+                        <button class="btn btn-danger" onclick="spinSlots(100)" style="width: 100px; font-weight: 700;">$ 100</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 5. TOP UP MODAL ==================== -->
+    <div class="modal-backdrop" id="balance-modal">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>Top Up Account</h3>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            <form id="balance-topup-form">
+                <div class="form-group">
+                    <label for="topup-amount">Deposit Cash Amount ($)</label>
+                    <input type="number" id="topup-amount" class="form-control" min="1" max="10000" placeholder="Enter amount to add" required>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 10px;">Top Up Balance</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main JS Application Controller -->
+    <script src="app.js"></script>
+</body>
+</html>
