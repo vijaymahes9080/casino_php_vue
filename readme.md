@@ -2,6 +2,14 @@
 
 A lightweight, interactive casino web application built with PHP (Laravel) and JavaScript (Vue.js). It features classic casino games, user authentication, and a balance management system.
 
+## 🚀 Play Live Demo on GitHub Pages
+You can play the fully functional client-side version of this game online without installing anything!
+👉 **[Play Live Demo Here](https://vijaymahes9080.github.io/casino_php_vue/)**
+
+*This static demo stores all profiles and cash balances locally in your browser's LocalStorage.*
+
+---
+
 ## 🚀 Technologies Used
 
 ### Backend (Server-side)
